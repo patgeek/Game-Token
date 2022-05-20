@@ -1,0 +1,19 @@
+
+
+démarrer server python
+
+python version < 3
+python -m SimpleHTTPServer 8000
+
+
+depuis python 3
+python -m http.server 8000
+----------------------------------
+Solidity token Api:
+npm install openzeppelin-solidity@2.5.0
+
+
+----migrate truffle developpement network-------------
+truffle develop
+> migrate --network development
+ 

@@ -1,0 +1,143 @@
+
+
+démarrer server python
+
+python version < 3
+python -m SimpleHTTPServer 8000
+
+
+depuis python 3
+python -m http.server 8000
+----------------------------------
+
+initialize truffle project
+
+truffle init (--force)
+
+connection au rezo test Ropsten:
+truffle console --network ropsten
+https://trufflesuite.com/docs/truffle/getting-started/using-truffle-develop-and-the-console/
+
+
+
+
+---------------------------------------
+Solidity token Api:
+npm install openzeppelin-solidity@2.5.0
+
+
+----migrate truffle developpement network-------------
+truffle develop
+> migrate --network development
+> migrate --network development --reset
+
+
+----------migrate truffle to ropsten public test network-------------
+
+  cmd terminal:
+npm install @truffle/hdwallet-provider
+
+truffle-config.js:
+
+//create a project on infura.io
+ const HDWalletProvider = require('@truffle/hdwallet-provider');
+ const infuraKey = "0e606735c78d4ee497195ee757a4ef76";
+
+const mnemonic = "pole display mention portion mimic battle ensure still glow hour convince shoulder";
+//mnemonic generated online https://iancoleman.io/bip39/
+
+  networks: {
+		
+	  ropsten: {
+      provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/${infuraKey}`),
+      network_id: 3,       // Ropsten's id
+     // gas: 5500000,        // Ropsten has a lower block limit than mainnet
+     // confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+     // timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+    },
+
+}
+
+cmd terminal:
+
+truffle compile
+
+
+//get funds for wallet in ropsten
+https://faucet.metamask.io/
+
+//deploy contract to ropsten test network
+
+truffle migrate --network ropsten
+
+
+si error :
+Truffle deployment error while deploying with Infura (Error: Callback was already called)
+
+solution:
+truffle migrate --network ropsten --reset
+
+truffle migrate --network ropsten --skipDryRun
+
+
+------total Suppy ----------truffle console---------pour interroger le contrat--------------------------
+truffle console(la console permet d'interagir avec le contrat et déployer vers rezo test ex ropsten)
+>(await GameToken.at("contract address")).totalSupply.call()
+>(await GameToken.at("0x4c7DFD13c8DAe4F99A1685baee7beE45999640aC")).mint("adress of the holder of the tokens", 10000)
+on mint 10000 tokens à l'adresse "0x4c7DFD13c8DAe4F99A1685baee7beE45999640aC"(une adresse locale ganache)
+(await GameToken.at("contract address")).totalSupply.call()
+ (await GameToken.at("0x6320Ee37Bb007714C7712c7aa09CfcF01e414f9a")).totalSupply.call().then(bn => bn.toNumber())
+> affiche ===> 10000 au format number (toNumber())
+
+-----------------------balance Of---------------------------------------------
+> (await GameToken.at("0x6320Ee37Bb007714C7712c7aa09CfcF01e414f9a")).balanceOf.call("address of holder of the tokens")
+> affiche le résultat au format Big number(BN)
+BN {
+  negative: 0,
+  words: [ 10000, <1 empty item> ],
+  length: 1,
+  red: null
+}
+
+
+
+ou
+npx truffle console --network development
+myToken = await GameToken.deployed() 
+myToken.mint("contract address", "10000")
+on mint 10000 tokens à l'adresse "0x4c7DFD13c8DAe4F99A1685baee7beE45999640aC"(une adresse locale ganache)
+
+
+
+ou
+truffle console --network ropsten
+(await GameToken.at("0x6d41e3Da1F72840e9B0Ff7D3adeC718BBBCb75A2")).balanceOf("0xD893842417CB9928eD4f27A702a2310cF1fF004a",1).then(bn => bn.toNumber())
+
+dans truffle-config.js: mettre une valeur gas très élevée ou supprimer la propriété gas
+  ropsten: {
+        provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/${infuraKey}`),
+        network_id: 3,       // Ropsten's id
+          gas: 500000,        // Ropsten has a lower block limit than mainnet
+        //confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+        //timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+         skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+      },
+
+
+--------------afficher toutes les fonctions du smart contract *******truffle console --------------------
+ (await GameToken.at("0x6320Ee37Bb007714C7712c7aa09CfcF01e414f9a"))
+
+--------------- afficher le symbole du token:----------------------------------
+truffle(development)> (await GameToken.at("0x6320Ee37Bb007714C7712c7aa09CfcF01e414f9a")).symbol.call()
+
+
+
+
+
+
+
+
+
+
+ 
